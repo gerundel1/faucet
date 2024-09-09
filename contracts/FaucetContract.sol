@@ -3,6 +3,9 @@ pragma solidity >=0.8.19 <0.9.0;
 
 contract Faucet {
 
+
+    address[] public funders;
+
     // this is a special function that will be called when you make a tx
     // that doesn't specify a function name to call
 
@@ -10,10 +13,17 @@ contract Faucet {
     // They can be called via contracts and other txs
     receive() external payable {}
 
-    function addFunds() external payable {}
+    function addFunds() external payable {
+        funders.push(msg.sender);
+    }
 
-    function justTesting() external pure returns(uint) {
-        return 2 + 2;
+    function getAllFunders() public view returns(address[] memory) {
+        return funders;
+    }
+
+    function getFunderAtIndex(uint8 index) external view returns(address) {
+        address[] memory _funders = getAllFunders(); 
+        return _funders[index];
     }
 
     // pure, view - read-only, no gas fees
@@ -30,3 +40,6 @@ contract Faucet {
 // Block info
 // Nonce - a hash that when combined with the minHash proofs that
 // the block has gone through proof of work
+
+// const instance = await Faucet.deployed();
+// instance.addFunds({from: accounts[0], value: "2"});
